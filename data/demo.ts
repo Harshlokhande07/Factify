@@ -1,0 +1,331 @@
+import {
+  Investigation,
+  Claim,
+  Source,
+  ClaimSourceLink,
+  SourceRelationship,
+  InvestigationState,
+} from "../lib/types";
+
+export const DEMO_ORIGINAL_TEXT =
+  "Councillor Quillon was arrested on a harbour-permit charge yesterday in Port Halvren. Online forwards claim Councillor Quillon is a foreign spy working against the district.";
+
+export function createDemoState(): InvestigationState {
+  const investigationId = "demo-investigation-2099";
+
+  const investigation: Investigation = {
+    id: investigationId,
+    originalText: DEMO_ORIGINAL_TEXT,
+    createdAt: "2099-03-05T09:00:00Z",
+    updatedAt: "2099-03-05T10:30:00Z",
+    isDemo: true,
+    schemaVersion: 1,
+  };
+
+  const claims: Claim[] = [
+    {
+      id: "claim-a",
+      investigationId,
+      text: "Councillor Quillon was arrested on a harbour-permit charge in Port Halvren.",
+      order: 0,
+      textRevision: 1,
+      originSpan: { start: 0, end: 77 },
+      status: "evidence_found",
+      statusHistory: [
+        { status: "not_checked", at: "2099-03-05T09:05:00Z" },
+        { status: "evidence_found", at: "2099-03-05T09:30:00Z" },
+      ],
+      checklist: {
+        source: true,
+        date: true,
+        evidence: true,
+        context: true,
+        corroboration: true,
+      },
+      notes: "Official press release confirms harbour permit charge.",
+      referenceUrl: "https://police.port-halvren.fictional/releases/2099-03-03",
+      questions: [
+        {
+          id: "q-a1",
+          ruleId: "F_ENTITY",
+          text: "Is the person or organization identified unambiguously?",
+          anchorText: "Councillor Quillon",
+          resolved: true,
+          edited: false,
+        },
+      ],
+      dismissedGaps: [],
+    },
+    {
+      id: "claim-b",
+      investigationId,
+      text: "Councillor Quillon is a foreign spy.",
+      order: 1,
+      textRevision: 1,
+      originSpan: { start: 78, end: 154 },
+      status: "needs_verification",
+      statusHistory: [
+        { status: "not_checked", at: "2099-03-05T09:05:00Z" },
+        { status: "needs_verification", at: "2099-03-05T10:15:00Z" },
+      ],
+      checklist: {
+        source: false,
+        date: false,
+        evidence: false,
+        context: false,
+        corroboration: false,
+      },
+      notes: "Espionage assertion appears in secondary repeat chains without primary substantiation.",
+      questions: [
+        {
+          id: "q-b1",
+          ruleId: "F_ALLEGATION",
+          text: "Does the source report a suspicion, an accusation, a charge, or an established finding?",
+          anchorText: "foreign spy",
+          resolved: false,
+          edited: false,
+        },
+      ],
+      dismissedGaps: [],
+    },
+  ];
+
+  const sources: Source[] = [
+    {
+      id: "src-1",
+      title: "Port Halvren Police Dept Press Release (Fictional)",
+      publisher: "Port Halvren Police Department",
+      sourceType: "press_release",
+      url: "https://police.port-halvren.fictional/releases/2099-03-03",
+      publishedAt: "2099-03-03",
+      datePrecision: "day",
+      accessedAt: "2099-03-05",
+      excerpt:
+        "Port Halvren Police confirmed the arrest of Councillor Mara Quillon on suspicion of falsifying municipal harbour permits. No other charges have been filed.",
+      notes: "Primary police statement regarding harbour permit infraction.",
+      isPrimaryMarkedByReviewer: true,
+      observations: {
+        authorIdentified: true,
+        primaryLinked: true,
+        dateAvailable: true,
+        citationsPresent: false,
+        sensationalWording: false,
+        independenceEstablished: true,
+      },
+    },
+    {
+      id: "src-2",
+      title: "Halvren Harbour Gazette Report (Fictional)",
+      publisher: "Halvren Harbour Gazette",
+      sourceType: "news_report",
+      url: "https://gazette.port-halvren.fictional/news/2099-03-03-councillor",
+      publishedAt: "2099-03-03",
+      datePrecision: "day",
+      accessedAt: "2099-03-05",
+      excerpt:
+        "The Gazette reviewed the police release announcing Councillor Quillon's arrest over harbour permits. An unnamed civic official claimed investigators are examining a possible espionage allegation.",
+      notes: "Cites police release for permit charge; mentions unconfirmed espionage suspicion.",
+      isPrimaryMarkedByReviewer: false,
+      observations: {
+        authorIdentified: true,
+        primaryLinked: true,
+        dateAvailable: true,
+        citationsPresent: true,
+        sensationalWording: false,
+        independenceEstablished: false,
+      },
+    },
+    {
+      id: "src-3",
+      title: "EchoNet Public Post #4910 (Fictional)",
+      publisher: "Anonymous Account @HalvrenTruth",
+      sourceType: "social_post",
+      url: "https://echonet.fictional/p/4910",
+      publishedAt: "2099-03-04",
+      datePrecision: "day",
+      accessedAt: "2099-03-05",
+      excerpt: "Councillor Quillon was confirmed to be a foreign spy.",
+      notes: "Shifts Gazette's mention of 'investigating possible allegation' to definitive assertion.",
+      isPrimaryMarkedByReviewer: false,
+      observations: {
+        authorIdentified: false,
+        primaryLinked: false,
+        dateAvailable: true,
+        citationsPresent: false,
+        sensationalWording: true,
+        independenceEstablished: false,
+      },
+    },
+    {
+      id: "src-4",
+      title: "Forwarded Chat Broadcast (Fictional)",
+      publisher: "Unknown Forwarder (Messaging)",
+      sourceType: "messaging_forward",
+      publishedAt: null,
+      datePrecision: "unknown",
+      dateNote: "No publication or transmission timestamp available on the forwarded message.",
+      accessedAt: "2099-03-05",
+      excerpt: "BREAKING: spy arrested, they don't want you to know. Forward to everyone!!",
+      notes: "Viral broadcast without timestamp or attribution.",
+      isPrimaryMarkedByReviewer: false,
+      observations: {
+        authorIdentified: false,
+        primaryLinked: false,
+        dateAvailable: false,
+        citationsPresent: false,
+        sensationalWording: true,
+        independenceEstablished: false,
+      },
+    },
+    {
+      id: "src-5",
+      title: "Halvren Beacon Commentary (Fictional)",
+      publisher: "Halvren Beacon Online",
+      sourceType: "blog_opinion",
+      url: "https://beacon.port-halvren.fictional/posts/quillon-spy",
+      publishedAt: "2099-03-05",
+      datePrecision: "day",
+      accessedAt: "2099-03-05",
+      excerpt: "As revealed by @HalvrenTruth, Councillor Quillon was confirmed to be a foreign spy.",
+      notes: "Explicitly attributes statement to the EchoNet social post.",
+      isPrimaryMarkedByReviewer: false,
+      observations: {
+        authorIdentified: true,
+        primaryLinked: false,
+        dateAvailable: true,
+        citationsPresent: true,
+        sensationalWording: true,
+        independenceEstablished: false,
+      },
+    },
+  ];
+
+  const claimSourceLinks: ClaimSourceLink[] = [
+    // Claim A links
+    {
+      id: "csl-a-1",
+      claimId: "claim-a",
+      sourceId: "src-1",
+      type: "supports",
+      notes: "Official press release confirms harbour permit charge.",
+      excerptRelevance: "addresses_claim",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+    {
+      id: "csl-a-2",
+      claimId: "claim-a",
+      sourceId: "src-2",
+      type: "supports",
+      notes: "Reports arrest while citing police statement.",
+      excerptRelevance: "addresses_claim",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+    // Claim B links
+    {
+      id: "csl-b-1",
+      claimId: "claim-b",
+      sourceId: "src-1",
+      type: "not_established",
+      notes: "Police release does not mention espionage charges.",
+      excerptRelevance: "not_assessed",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+    {
+      id: "csl-b-2",
+      claimId: "claim-b",
+      sourceId: "src-2",
+      type: "contextualizes",
+      notes: "Reports unverified leak that officials are examining a possible allegation.",
+      excerptRelevance: "partly",
+      scopeMismatch: "possible",
+      assessedAtClaimRevision: 1,
+    },
+    {
+      id: "csl-b-3",
+      claimId: "claim-b",
+      sourceId: "src-3",
+      type: "repeats",
+      notes: "Restates allegation without providing corroborating documents.",
+      excerptRelevance: "addresses_claim",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+    {
+      id: "csl-b-4",
+      claimId: "claim-b",
+      sourceId: "src-4",
+      type: "repeats",
+      notes: "Viral message amplifies assertion without evidence.",
+      excerptRelevance: "addresses_claim",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+    {
+      id: "csl-b-5",
+      claimId: "claim-b",
+      sourceId: "src-5",
+      type: "repeats",
+      notes: "Blog restates claim while quoting EchoNet post.",
+      excerptRelevance: "addresses_claim",
+      scopeMismatch: "none_noted",
+      assessedAtClaimRevision: 1,
+    },
+  ];
+
+  const sourceRelationships: SourceRelationship[] = [
+    {
+      id: "rel-2-1",
+      fromSourceId: "src-2",
+      toSourceId: "src-1",
+      type: "explicitly_cites",
+      verification: "documented",
+      explanation: "Gazette explicitly references the police department press release.",
+    },
+    {
+      id: "rel-3-2",
+      fromSourceId: "src-3",
+      toSourceId: "src-2",
+      type: "appears_to_repeat",
+      verification: "reviewer_suspected",
+      explanation: "EchoNet post repeats the Gazette leak but drops hedging language ('possible' -> 'confirmed').",
+    },
+    {
+      id: "rel-4-3",
+      fromSourceId: "src-4",
+      toSourceId: "src-3",
+      type: "unknown",
+      verification: "unknown",
+      explanation: "Undated forward shares phrasing with social post, but transmission order is unknown.",
+    },
+    {
+      id: "rel-5-3",
+      fromSourceId: "src-5",
+      toSourceId: "src-3",
+      type: "explicitly_cites",
+      verification: "documented",
+      explanation: "Beacon article directly quotes and attributes claim to @HalvrenTruth.",
+    },
+  ];
+
+  return {
+    investigation,
+    claims,
+    sources,
+    claimSourceLinks,
+    sourceRelationships,
+    wordingReviews: {
+      hedge_to_assertion: {
+        reviewState: "unconfirmed",
+        note: "Reviewer noted shift from suspected leak in S2 to confirmed spy assertion in S3.",
+      },
+    },
+    ui: {
+      nodePositions: {},
+    },
+    suggestions: [],
+    searchRuns: [],
+  };
+}

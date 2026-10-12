@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+@layer base {
+  body {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+}
+
+/* Atmospheric Ambient Mesh Gradient inspired by modern clean AI interfaces */
+.ambient-gradient-bg {
+  background-color: #faf8f5;
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(244, 143, 177, 0.28) 0px, transparent 45%),
+    radial-gradient(at 0% 10%, rgba(254, 215, 170, 0.35) 0px, transparent 40%),
+    radial-gradient(at 15% 90%, rgba(186, 230, 253, 0.45) 0px, transparent 50%),
+    radial-gradient(at 85% 90%, rgba(221, 214, 254, 0.35) 0px, transparent 50%),
+    radial-gradient(at 50% 40%, rgba(255, 255, 255, 0.95) 0px, transparent 65%);
+  background-attachment: fixed;
+}
+
+.dark .ambient-gradient-bg {
+  background-color: #0b0f17;
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.18) 0px, transparent 45%),
+    radial-gradient(at 0% 10%, rgba(245, 158, 11, 0.12) 0px, transparent 40%),
+    radial-gradient(at 15% 90%, rgba(56, 189, 248, 0.2) 0px, transparent 50%),
+    radial-gradient(at 85% 90%, rgba(168, 85, 247, 0.18) 0px, transparent 50%),
+    radial-gradient(at 50% 40%, rgba(15, 23, 42, 0.9) 0px, transparent 65%);
+  background-attachment: fixed;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.dark .glass-pill {
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* React Flow custom styling */
+.react-flow__attribution {
+  display: none !important;
+}
+
+.react-flow__node {
+  cursor: pointer;
+}
+
+/* Print styling for investigation report */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-page-break {
+    page-break-before: always;
+  }
+}
