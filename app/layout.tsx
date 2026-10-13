@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="ambient-gradient-bg min-h-screen text-slate-900 transition-colors dark:text-slate-100">
+      <body className="ambient-gradient-bg min-h-screen bg-[#faf8f5] text-slate-900 transition-colors dark:bg-[#0b0f17] dark:text-slate-100">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <StoreHydrator>
             {children}

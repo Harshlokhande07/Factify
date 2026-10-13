@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useCallback, useState, useEffect } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   Controls,
@@ -19,6 +19,7 @@ import { useReviewStore } from "@/store/review-store";
 import { buildGraph } from "@/lib/derive/graph";
 import { FilterState } from "@/lib/types";
 import { Maximize2, Minimize2, RotateCcw, Filter, AlertCircle, Scan } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const nodeTypes = {
   claimNode: ClaimNode,
@@ -203,6 +204,9 @@ function GraphCanvasInner({
     ? "relative h-full w-full bg-transparent"
     : "relative h-[420px] md:h-[580px] w-full overflow-hidden rounded-3xl border border-white/80 bg-white/50 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/50";
 
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
     <div className={containerClass}>
       <ReactFlow
@@ -215,12 +219,13 @@ function GraphCanvasInner({
         onEdgeClick={handleEdgeClick}
         onPaneClick={() => onSelect(null)}
         nodeTypes={nodeTypes}
+        colorMode={isDark ? "dark" : "light"}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.2}
         maxZoom={1.5}
       >
-        <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#94a3b8" />
+        <Background variant={BackgroundVariant.Dots} gap={16} size={1} color={isDark ? "#475569" : "#94a3b8"} />
         <Controls showInteractive={false} position="bottom-left" />
 
         <GraphPanelControls

@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "backend": "cd backend && uvicorn factify_search:app --port 8000",
+    "backend": "cd backend && python -m uvicorn factify_search:app --port 8000",
     "backend:test": "cd backend && python -m pytest -q",
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\"",
     "verify": "tsc --noEmit && eslint && npm run check:secrets && vitest run && next build"
